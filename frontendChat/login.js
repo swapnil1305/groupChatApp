@@ -9,6 +9,7 @@ async function login(e){
     console.log(logindetails);
     const response= await axios.post("http://localhost:4000/users/login",logindetails)
     if(response.status==201){   
+        window.location.href="./chat.html"
         alert("Successfully logged in"); 
     }
     
