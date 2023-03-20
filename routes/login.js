@@ -1,6 +1,6 @@
 const express=require('express');
 
-const logincontroller=require('../controllers/login');
+const logincontroller=require('../controller/login');
 
 const router=express.Router();
 

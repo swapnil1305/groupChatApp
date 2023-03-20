@@ -1,6 +1,7 @@
 const signup=require('../models/signup');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
+require('dotenv').config();
 
 function validatestring(string){
    if(string==undefined || string.length===0)
@@ -29,7 +30,7 @@ exports.login= async (req,res,next)=>{
             }
             else if(result===true){
             //console.log(user[0].password);
-            res.status(201).json({ success: true, message:"user logged in successfully"
+            res.status(201).json({ success: true, message:"User logged in successfully"
           ,token:generateToken(user[0].id,user[0].name)})
             }
     

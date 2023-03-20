@@ -8,7 +8,8 @@ async function login(e){
       
     console.log(logindetails);
     const response= await axios.post("http://localhost:4000/users/login",logindetails)
-    if(response.status==201){    
+    if(response.status==201){   
+        alert("Successfully logged in"); 
     }
     
         }catch(err){
