@@ -12,8 +12,7 @@ const Phonenumber=document.querySelector('#Phonenumber');
             password:password.value
           }
 
-    const response= await axios.post("http://localhost:4000/users/signup",
-    signupdetails)
+    const response= await axios.post("http://localhost:4000/users/signup",signupdetails)
     
     if(response.status==200){
       alert("User already exists, Please Login");
@@ -24,6 +23,7 @@ const Phonenumber=document.querySelector('#Phonenumber');
       alert("Successfuly signed up");
      window.location.href="./login.html"
     }
+    
     else{
        throw new Error('failed to login')
     }
