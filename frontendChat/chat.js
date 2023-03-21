@@ -130,7 +130,7 @@ createGroupForm.addEventListener('submit', async(event) => {
     event.preventDefault();
     let grpinformation = {
       groupName: groupNameInput.value,
-      members: membersInput.value.split(',').map(email => email.trim())
+      members: membersInput.value.split(',').map(name => name.trim())
     };
   
     if (groupNameInput.value && membersInput.value) {
@@ -150,13 +150,21 @@ createGroupForm.addEventListener('submit', async(event) => {
          // closeModal();
           groupNameInput.value = '';
           membersInput.value = '';
-        } else {
+        }
+        else if(response.status==202){
+          groupNameInput.value = '';
+          membersInput.value = '';
+         alert('You are not admin of this group,you can not add the user to the group')
+        }
+         else {
+          groupNameInput.value = '';
+          membersInput.value = '';
           throw new Error(response.message);
         }
       } catch (error) {
         alert(error.message);
       }
     } else {
-      alert('Please fill out all fields.');
+      alert('Please fill out all fields');
     }
   });

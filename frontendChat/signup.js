@@ -20,10 +20,10 @@ const Phonenumber=document.querySelector('#Phonenumber');
     }
    
     else if(response.status==201){
-      alert("Successfuly signed up");
+      alert("Successfuly created new user");
      window.location.href="./login.html"
     }
-    
+
     else{
        throw new Error('failed to login')
     }
