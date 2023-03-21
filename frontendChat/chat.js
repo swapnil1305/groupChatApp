@@ -20,7 +20,6 @@ window.addEventListener('load', () => {
 
 async function getusers() {
     const response = await axios.get("http://localhost:4000/users/signup");
-    console.log(response.data.users);
     const userlist = response.data.users;
     userlist.forEach((user) => {
         const userElement = document.createElement('div');
@@ -31,12 +30,22 @@ async function getusers() {
 
 async function getmessages(){
 const response = await axios.get("http://localhost:4000/users/chat");
-console.log("response", response);
-console.log(response.data.message);
 const chatHistory = response.data.message;
+chatMessages.innerHTML = '';
 chatHistory.forEach((chat) => {
     const chatMessageElement = document.createElement('div');
     chatMessageElement.textContent = `${chat.signupName}: ${chat.message}`;
     chatMessages.appendChild(chatMessageElement);
 })
 }
+let intervalId;
+
+function startUpdatingMessages() {
+  // Clear any previous interval
+  clearInterval(intervalId);
+
+  // Set new interval to call the function every 1 second
+  intervalId = setInterval(getmessages, 1000);
+}
+
+startUpdatingMessages();
