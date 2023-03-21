@@ -14,19 +14,12 @@ const Phonenumber=document.querySelector('#Phonenumber');
 
     const response= await axios.post("http://localhost:4000/users/signup",
     signupdetails)
-    if(response.status==201){
-     // window.location.href="./login.html"
-     alert("Successfully signed up");
-    }
-
+    
     if(response.status==200){
       alert("User already exists, Please Login");
      window.location.href="./login.html"
     }
-    else if(response.status==401){
-    alert("User already exists, Please Login");
-     console.log(response.data.message);
-    }
+   
     else if(response.status==201){
       alert("Successfuly signed up");
      window.location.href="./login.html"

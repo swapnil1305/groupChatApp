@@ -3,35 +3,40 @@ const chatMessageInput = document.getElementById('chat-message');
 const userList = document.getElementById('user-list');
 const chatMessages = document.getElementById('chat-messages');
 
-chatForm.addEventListener('submit',async (event) => {
-  event.preventDefault();
-  const token=localStorage.getItem('token');
-  let message ={text:chatMessageInput.value};
-  const response = await axios.post("http://localhost:4000/users/chat",message,{headers: {'Authentication' :token}});
-  console.log(response);
-  chatMessageInput.value = '';
+chatForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    let message = { text: chatMessageInput.value };
+    const response = await axios.post("http://localhost:4000/users/chat", message, { headers: { 'Authentication': token } });
+    console.log(response);
+    chatMessageInput.value = '';
 });
 
 
-window.addEventListener('load', ()=>{
- getusers();
+window.addEventListener('load', () => {
+    getusers();
+    getmessages();
 })
 
-async function getusers(){
-const response = await axios.get("http://localhost:4000/users/signup");
-console.log(response.data.users);
-const userlist=response.data.users;
-userlist.forEach((user) => {
-  const userElement = document.createElement('div');
-  userElement.textContent = user.name+" joined";
-  userList.appendChild(userElement);
-});
+async function getusers() {
+    const response = await axios.get("http://localhost:4000/users/signup");
+    console.log(response.data.users);
+    const userlist = response.data.users;
+    userlist.forEach((user) => {
+        const userElement = document.createElement('div');
+        userElement.textContent = user.name + " joined";
+        userList.appendChild(userElement);
+    });
 }
 
-// Display chat messages
-const chatHistory = [{ sender: 'User 1', message: 'Hi' }, { sender: 'User 2', message: 'Hello' }]; // Replace with actual chat history from server
+async function getmessages(){
+const response = await axios.get("http://localhost:4000/users/chat");
+console.log("response", response);
+console.log(response.data.message);
+const chatHistory = response.data.message;
 chatHistory.forEach((chat) => {
-  const chatMessageElement = document.createElement('div');
-  chatMessageElement.textContent = `${chat.sender}: ${chat.message}`;
-  chatMessages.appendChild(chatMessageElement);
-});
+    const chatMessageElement = document.createElement('div');
+    chatMessageElement.textContent = `${chat.signupName}: ${chat.message}`;
+    chatMessages.appendChild(chatMessageElement);
+})
+}
