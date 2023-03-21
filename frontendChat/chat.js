@@ -3,18 +3,61 @@ const chatMessageInput = document.getElementById('chat-message');
 const userList = document.getElementById('user-list');
 const chatMessages = document.getElementById('chat-messages');
 
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
+
 chatForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('token');
+    const tok=parseJwt(token);
     let message = { text: chatMessageInput.value };
+    let obj={
+        name:tok.name,
+        text:chatMessageInput.value
+      }
+      const date = new Date().getTime(); // Get current timestamp
+      localStorage.setItem(date, JSON.stringify(obj)); // Store chat message with timestamp as key
+    
+      // Remove oldest chat message if there are more than 10 saved
+      let oldestKey=localStorage.key(0);
+      if (localStorage.length > 11) {
+        for(let i=1;i<localStorage.length;i++){
+          if(localStorage.key(i)<oldestKey){
+          oldestKey=localStorage.key(i);
+          }
+    
+        } // Get key of oldest chat message
+        localStorage.removeItem(oldestKey); // Remove oldest chat message from localStorage
+      }
     const response = await axios.post("http://localhost:4000/users/chat", message, { headers: { 'Authentication': token } });
     console.log(response);
     chatMessageInput.value = '';
 });
 
+function showNewUserOnScreen(chat){
+
+    const chatMessageElement = document.createElement('div');
+    chatMessageElement.textContent = `${chat.name}: ${chat.text}`;
+    chatMessages.appendChild(chatMessageElement);
+    }
+
 
 window.addEventListener('load', () => {
     getusers();
+    let Details, details;
+    Object.keys(localStorage).forEach((key) => {
+      if(key!=='token'){
+    Details = localStorage.getItem(key);
+    details = JSON.parse(Details);
+    console.log("detail", details);
+    showNewUserOnScreen(details);}
+    });
     getmessages();
 })
 
@@ -29,7 +72,13 @@ async function getusers() {
 }
 
 async function getmessages(){
-const response = await axios.get("http://localhost:4000/users/chat");
+    let newKey=localStorage.key(0);
+    for(let i=1;i<localStorage.length;i++){
+        if(localStorage.key(i)<newKey){
+       newKey=localStorage.key(i);
+      }
+    }
+  const response = await axios.get(`http://localhost:4000/users/chat?currenttime=${newKey}}`);
 const chatHistory = response.data.message;
 chatMessages.innerHTML = '';
 chatHistory.forEach((chat) => {
