@@ -46,7 +46,7 @@ chatForm.addEventListener('submit', async (event) => {
     } // Get key of oldest chat message
     localStorage.removeItem(oldestKey); // Remove oldest chat message from localStorage
   }
-  const response = await axios.post(`http://localhost:4000/users/chat?groupid=${grpid}`, message, { headers: { 'Authentication': token } });
+  const response = await axios.post(`http://44.204.114.231:4000/users/chat?groupid=${grpid}`, message, { headers: { 'Authentication': token } });
   chatMessageInput.value = '';
 });
 
@@ -76,7 +76,7 @@ window.addEventListener('load', () => {
 
 async function getusers() {
   const grpid = localStorage.getItem('groupId');
-  const response = await axios.get(`http://localhost:4000/groupusers/getname?groupid=${grpid}`);
+  const response = await axios.get(`http://44.204.114.231:4000/groupusers/getname?groupid=${grpid}`);
   const userlist = response.data.grpusers;
   const grpName = response.data.grpusers[0].groupName;
   const groupNameElement = document.getElementById('group-name');
@@ -101,7 +101,7 @@ async function getmessages() {
   const grpid = localStorage.getItem('groupId')
   console.log("currenttime", newKey);
 
-  const response = await axios.get(`http://localhost:4000/users/chat?currenttime=${newKey}&groupid=${grpid}`);
+  const response = await axios.get(`http://44.204.114.231:4000/users/chat?currenttime=${newKey}&groupid=${grpid}`);
   const chatHistory = response.data.message;
   // Clear previous messages
   chatMessages.innerHTML = '';
@@ -136,7 +136,7 @@ removeMemberForm.addEventListener('submit', async (event) => {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await axios.post("http://localhost:4000/group/removemember", memberremoveinformation, { headers: { 'Authentication': token } });
+      const response = await axios.post("http://44.204.114.231:4000/group/removemember", memberremoveinformation, { headers: { 'Authentication': token } });
       console.log(response);
       if (response.status == 201) {
         getusers();
@@ -181,7 +181,7 @@ makeMemberAdmin.addEventListener('submit', async (event) => {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await axios.post("http://localhost:4000/group/makememberadmin", membermakeadmininformation, { headers: { 'Authentication': token } });
+      const response = await axios.post("http://44.204.114.231:4000/group/makememberadmin", membermakeadmininformation, { headers: { 'Authentication': token } });
       console.log(response);
       if (response.status == 201) {
         getusers();

@@ -40,7 +40,7 @@ chatForm.addEventListener('submit', async (event) => {
     } // Get key of oldest chat message
     localStorage.removeItem(oldestKey); // Remove oldest chat message from localStorage
   }
-  const response = await axios.post("http://localhost:4000/users/chat", message, { headers: { 'Authentication': token } });
+  const response = await axios.post("http://44.204.114.231:4000/users/chat", message, { headers: { 'Authentication': token } });
   console.log(response);
   chatMessageInput.value = '';
 });
@@ -69,7 +69,7 @@ window.addEventListener('load', () => {
 
 async function getgroups() {
   const token = localStorage.getItem('token');
-  const response = await axios.get("http://localhost:4000/users/getgroupname", { headers: { 'Authentication': token } });
+  const response = await axios.get("http://44.204.114.231:4000/users/getgroupname", { headers: { 'Authentication': token } });
   const grpdetails = response.data.groupDetails;
   const parent = document.querySelector('#groups');
   for (let i = 0; i < grpdetails.length; i++) {
@@ -90,7 +90,7 @@ async function insideGroup(id) {
 }
 
 async function getusers() {
-  const response = await axios.get("http://localhost:4000/users/signup");
+  const response = await axios.get("http://44.204.114.231:4000/users/signup");
   const userlist = response.data.users;
   userlist.forEach((user) => {
     const userElement = document.createElement('div');
@@ -106,7 +106,7 @@ async function getmessages() {
       newKey = localStorage.key(i);
     }
   }
-  const response = await axios.get(`http://localhost:4000/users/chat?currenttime=${newKey}`);
+  const response = await axios.get(`http://44.204.114.231:4000/users/chat?currenttime=${newKey}`);
   const chatHistory = response.data.message;
   chatMessages.innerHTML = '';
   chatHistory.forEach((chat) => {
@@ -137,7 +137,7 @@ createGroupForm.addEventListener('submit', async (event) => {
   if (groupNameInput.value && membersInput.value) {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post("http://localhost:4000/group/creategrp", grpinformation, { headers: { 'Authentication': token } });
+      const response = await axios.post("http://44.204.114.231:4000/group/creategrp", grpinformation, { headers: { 'Authentication': token } });
       console.log(response.data.groupid);
       if (response.status == 201) {
         // Add new group to list of groups

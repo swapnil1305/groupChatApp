@@ -12,7 +12,7 @@ async function signup(e) {
       password: password.value
     }
 
-    const response = await axios.post("http://localhost:4000/users/signup", signupdetails)
+    const response = await axios.post("http://44.204.114.231:4000/users/signup", signupdetails)
 
     if (response.status == 200) {
       alert("User already exists, Please Login");

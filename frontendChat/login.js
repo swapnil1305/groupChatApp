@@ -8,7 +8,7 @@ async function login(e) {
             password: password.value
         }
 
-        const response = await axios.post("http://localhost:4000/users/login", logindetails)
+        const response = await axios.post("http://44.204.114.231:4000/users/login", logindetails)
         if (response.status == 201) {
             alert("successfully logged in")
         }

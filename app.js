@@ -25,7 +25,7 @@ const groupchatRoutes = require('./routes/groupchat');
 
 
 app.use(bodyParser.json({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(userRoutes);
 app.use(loginRoutes);
@@ -35,7 +35,7 @@ app.use(groupchatRoutes);
 
 app.use((req, res) => {
     console.log(req.url)
-    res.sendFile(path.join(__dirname, `${req.url}`))
+    res.sendFile(path.join(__dirname, `frontendChat/${req.url}`))
 })
 
 User.hasMany(Chat);
