@@ -43,6 +43,7 @@ exports.signup = async (req, res, next) => {
     }
 }
 
+
 exports.getuser = async (req, res, next) => {
     try {
         const signupuser = await user.findAll()

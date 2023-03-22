@@ -21,8 +21,8 @@ const Chat = sequelize.define('chat', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    groupId:{
-     type:Sequelize.INTEGER
+    groupId: {
+        type: Sequelize.INTEGER
     }
 });
 

@@ -8,8 +8,8 @@ exports.postchat = async (req, res, next) => {
             message: req.body.text,
             signupId: req.user.id,
             signupName: req.user.name,
-            groupId:req.query.groupid,
-            time:new Date().getTime(),
+            groupId: req.query.groupid,
+            time: new Date().getTime(),
         })
         res.status(201).json({ message: 'Succesfully sent text' });
     }
@@ -24,13 +24,13 @@ exports.getchat = async (req, res, next) => {
         const currentTime = req.query.currenttime;
         const groupId = req.query.groupid || null; // set groupId to null if it is not provided in the query params
         const messages = await Chat.findAll({
-      where: {
-        time: {
-          [Op.gt]: currentTime
-        },
-        groupId: groupId
-      }
-    });
+            where: {
+                time: {
+                    [Op.gt]: currentTime
+                },
+                groupId: groupId
+            }
+        });
         res.status(201).json({ success: true, message: messages });
     }
     catch (err) {
