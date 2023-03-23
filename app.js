@@ -13,9 +13,22 @@ var cors = require('cors');
 const app = express();
 
 app.use(cors({
-    origin: "null",
-    methods: ["GET", "POST"],
+    origin: "*",
+    // methods: ["GET", "POST"],
 }));
+
+const io = require('socket.io')(8000,{
+    cors: {
+        origin: '*',
+      }
+});
+
+io.on('connection', socket => {
+    socket.on('send-message', room => {
+        console.log(room);
+        io.emit('receive-message', room);
+    });
+})
 
 const userRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
@@ -40,8 +53,12 @@ app.use((req, res) => {
 
 User.hasMany(Chat);
 Chat.belongsTo(User);
+
 User.belongsToMany(Group, { through: 'usergroup', foreignKey: 'signupId' });
 Group.belongsToMany(User, { through: 'usergroup', foreignKey: 'groupId' });
+
+Group.hasMany(Chat);
+Chat.belongsTo(Group);
 
 sequelize
     .sync()

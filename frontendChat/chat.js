@@ -1,7 +1,9 @@
+// const io = require('socket.io-client');
 const chatForm = document.getElementById('chat-form');
 const chatMessageInput = document.getElementById('chat-message');
 const userList = document.getElementById('user-list');
 const chatMessages = document.getElementById('chat-messages');
+const socket = io('http://localhost:8000')
 
 const createGroupForm = document.querySelector('#create-group-form');
 const groupNameInput = document.querySelector('#group-name');
@@ -20,6 +22,7 @@ function parseJwt(token) {
 chatForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const token = localStorage.getItem('token');
+  const groupId=JSON.parse(localStorage.getItem('groupId'));
   const tok = parseJwt(token);
   let message = { text: chatMessageInput.value };
   let obj = {
@@ -42,6 +45,7 @@ chatForm.addEventListener('submit', async (event) => {
   }
   const response = await axios.post("http://44.204.114.231:4000/users/chat", message, { headers: { 'Authentication': token } });
   console.log(response);
+  socket.emit('send-message', groupId);
   chatMessageInput.value = '';
 });
 
@@ -86,7 +90,6 @@ async function insideGroup(id) {
   } catch (err) {
     console.log("error in inside group FE", err)
   }
-
 }
 
 async function getusers() {
@@ -115,17 +118,28 @@ async function getmessages() {
     chatMessages.appendChild(chatMessageElement);
   })
 }
-let intervalId;
 
-function startUpdatingMessages() {
-  // Clear any previous interval
-  clearInterval(intervalId);
+socket.on('receive-message', async (group) => {
+  const groupId=JSON.parse(localStorage.getItem('groupId'));
+  console.log(">>>>>",group,groupId);
+  console.log(group===groupId);
+  if(group === groupId){
+      getmessages();
+      getusers();
+  }
+})
 
-  // Set new interval to call the function every 1 second
-  intervalId = setInterval(getmessages, 1000);
-}
+// let intervalId;
 
-startUpdatingMessages();
+// function startUpdatingMessages() {
+//   // Clear any previous interval
+//   clearInterval(intervalId);
+
+//   // Set new interval to call the function every 1 second
+//   intervalId = setInterval(getmessages, 1000);
+// }
+
+// startUpdatingMessages();
 
 createGroupForm.addEventListener('submit', async (event) => {
   event.preventDefault();
