@@ -27,19 +27,17 @@ exports.login = async (req, res, next) => {
           res.status(500).json({ message: "something went wrong" })
         }
         else if (result === true) {
-          res.status(201).json({ success: true, message: "user logged successfully", token: generateToken(user[0].id, user[0].name) })
+          res.status(201).json({ success: true, message: "user logged in successfully", token: generateToken(user[0].id, user[0].name) })
         }
-
         else {
           res.status(401).json({ success: false, message: "incorrect password" })
         }
       }
-      )
-    }
+    )
+  }
     else {
       res.status(404).json({ success: false, message: "User not found" })
     }
-
   }
   catch (err) {
     res.status(500).json({ message: err, success: false })

@@ -10,6 +10,10 @@ const groupNameInput = document.querySelector('#group-name');
 const membersInput = document.querySelector('#members');
 const groupsList = document.querySelector('#groups');
 
+const uploadbtn=document.getElementById('uploadbtn');
+
+const file=document.getElementById('file');
+
 function parseJwt(token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -20,6 +24,7 @@ function parseJwt(token) {
 }
 
 chatForm.addEventListener('submit', async (event) => {
+  console.log("yoooooo")
   event.preventDefault();
   const token = localStorage.getItem('token');
   const groupId=JSON.parse(localStorage.getItem('groupId'));
@@ -44,15 +49,15 @@ chatForm.addEventListener('submit', async (event) => {
     localStorage.removeItem(oldestKey); // Remove oldest chat message from localStorage
   }
   const response = await axios.post("http://44.204.114.231:4000/users/chat", message, { headers: { 'Authentication': token } });
-  console.log(response);
   socket.emit('send-message', groupId);
   chatMessageInput.value = '';
 });
 
-function showNewUserOnScreen(chat) {
+
+function showNewChatOnScreen(chat) {
 
   const chatMessageElement = document.createElement('div');
-  chatMessageElement.textContent = `${chat.name}: ${chat.text}`;
+  // chatMessageElement.textContent = `${chat.name}>>>>> ${chat.text}`;
   chatMessages.appendChild(chatMessageElement);
 }
 
@@ -64,12 +69,13 @@ window.addEventListener('load', () => {
     if (key !== 'token' && key !== 'groupId') {
       Details = localStorage.getItem(key);
       details = JSON.parse(Details);
-      showNewUserOnScreen(details);
+      showNewChatOnScreen(details);
     }
+    getmessages();
   });
-  getgroups();
-  getmessages();
 })
+getgroups();
+
 
 async function getgroups() {
   const token = localStorage.getItem('token');
@@ -79,9 +85,9 @@ async function getgroups() {
   for (let i = 0; i < grpdetails.length; i++) {
     let child = `<li onclick="insideGroup(${grpdetails[i].groupId})">${grpdetails[i].groupName}</li>`
     parent.innerHTML = parent.innerHTML + child
-
   }
 }
+
 
 async function insideGroup(id) {
   try {
@@ -92,15 +98,17 @@ async function insideGroup(id) {
   }
 }
 
+
 async function getusers() {
   const response = await axios.get("http://44.204.114.231:4000/users/signup");
   const userlist = response.data.users;
   userlist.forEach((user) => {
     const userElement = document.createElement('div');
-    userElement.textContent = user.name + " joined";
+    userElement.textContent = user.name
     userList.appendChild(userElement);
   });
 }
+
 
 async function getmessages() {
   let newKey = localStorage.key(0);
@@ -114,15 +122,16 @@ async function getmessages() {
   chatMessages.innerHTML = '';
   chatHistory.forEach((chat) => {
     const chatMessageElement = document.createElement('div');
-    chatMessageElement.textContent = `${chat.signupName}: ${chat.message}`;
+    chatMessageElement.textContent = `${chat.signupName} >>>> ${chat.message}`;
     chatMessages.appendChild(chatMessageElement);
   })
 }
 
+
 socket.on('receive-message', async (group) => {
   const groupId=JSON.parse(localStorage.getItem('groupId'));
-  console.log(">>>>>",group,groupId);
-  console.log(group===groupId);
+  //console.log(">>>>>",group,groupId);
+  //console.log(group===groupId);
   if(group === groupId){
       getmessages();
       getusers();
@@ -130,7 +139,6 @@ socket.on('receive-message', async (group) => {
 })
 
 // let intervalId;
-
 // function startUpdatingMessages() {
 //   // Clear any previous interval
 //   clearInterval(intervalId);
@@ -141,13 +149,13 @@ socket.on('receive-message', async (group) => {
 
 // startUpdatingMessages();
 
+
 createGroupForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   let grpinformation = {
     groupName: groupNameInput.value,
     members: membersInput.value.split(',').map(name => name.trim())
   };
-
   if (groupNameInput.value && membersInput.value) {
     try {
       const token = localStorage.getItem('token');
@@ -159,7 +167,6 @@ createGroupForm.addEventListener('submit', async (event) => {
 
         let child = `<li onclick="insideGroup(${response.data.groupid}); getgroups()">${groupNameInput.value}</li>`
         parent.innerHTML = parent.innerHTML + child
-
 
         // Close modal and clear form inputs
         // closeModal();
@@ -183,3 +190,38 @@ createGroupForm.addEventListener('submit', async (event) => {
     alert('Please fill out all fields');
   }
 });
+
+
+uploadbtn.addEventListener('click',uploadFile);
+
+       async function uploadFile(e){
+        try{
+            e.preventDefault();
+            const uploadedfile=file.files[0];
+            console.log(uploadedfile);
+            if(!uploadedfile){
+               msg.innerHTML="Please Upload a file ";
+               setTimeout(()=>{
+                   msg.innerHTML="";
+               },3000)
+           }
+           else{
+            const formData=new FormData();
+            formData.append('file',uploadedfile);
+            console.log(formData);
+            const groupId=JSON.parse(localStorage.getItem('groupId'));
+            const token=localStorage.getItem('token');
+            const response=await axios.post(`http://localhost:4000/chat/sendfile/${groupId}`,formData,{headers:{"Authorization":token,'Content-Type':'multipart/form-data'}});
+                console.log(response);
+                showmessage(response.data.message.username,response.data.message.message)
+                uploadedfile.value=null;
+           }
+        }catch(err){
+            console.log(err);
+            msg.innerHTML="";
+          msg.innerHTML=msg.innerHTML+`<div>${err.response.data.message}</div>`;
+          setTimeout(()=>{
+            msg.innerHTML="";
+        },3000)
+      }
+  }

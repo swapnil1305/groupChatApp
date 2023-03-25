@@ -3,9 +3,10 @@ const chatMessageInput = document.getElementById('chat-message');
 const userList = document.getElementById('user-list');
 const chatMessages = document.getElementById('chat-messages');
 
+// const socket = io('http://localhost:8000')
+
 const removeMemberForm = document.querySelector('#remove-member-form');
 const membersInput = document.querySelector('#members');
-
 const makeMemberAdmin = document.querySelector('#admin-member-form');
 const makeMemberAdminInput = document.querySelector('#memberstomakeadmin');
 
@@ -15,15 +16,14 @@ function parseJwt(token) {
   var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
   }).join(''));
-
   return JSON.parse(jsonPayload);
 }
 
 chatForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const token = localStorage.getItem('token');
+  // const groupId=JSON.parse(localStorage.getItem('groupId'));
   const tok = parseJwt(token);
-
   const grpid = localStorage.getItem('groupId')
   let message = { text: chatMessageInput.value };
   let obj = {
@@ -47,6 +47,7 @@ chatForm.addEventListener('submit', async (event) => {
     localStorage.removeItem(oldestKey); // Remove oldest chat message from localStorage
   }
   const response = await axios.post(`http://44.204.114.231:4000/users/chat?groupid=${grpid}`, message, { headers: { 'Authentication': token } });
+  // socket.emit('send-message', groupId);
   chatMessageInput.value = '';
 });
 
@@ -54,12 +55,10 @@ chatForm.addEventListener('submit', async (event) => {
 function showNewExpenseOnScreen(chat) {
   if (chat.id) {
     const chatMessageElement = document.createElement('div');
-    chatMessageElement.textContent = `${chat.name}: ${chat.text}`;
+    // chatMessageElement.textContent = `${chat.name}: ${chat.text}`;
     chatMessages.appendChild(chatMessageElement);
   }
 }
-
-
 
 window.addEventListener('load', () => {
   getusers();
@@ -84,7 +83,7 @@ async function getusers() {
   userList.innerHTML = '';
   userlist.forEach((user) => {
     const userElement = document.createElement('div');
-    userElement.textContent = user.name + " joined";
+    userElement.textContent = user.name
     userList.appendChild(userElement);
   });
 }
@@ -95,22 +94,30 @@ async function getmessages() {
     if (localStorage.key(i) < newKey) {
       newKey = localStorage.key(i);
     }
-
   }
 
   const grpid = localStorage.getItem('groupId')
-  console.log("currenttime", newKey);
-
+  // console.log("currenttime", newKey);
   const response = await axios.get(`http://44.204.114.231:4000/users/chat?currenttime=${newKey}&groupid=${grpid}`);
   const chatHistory = response.data.message;
   // Clear previous messages
   chatMessages.innerHTML = '';
   chatHistory.forEach((chat) => {
     const chatMessageElement = document.createElement('div');
-    chatMessageElement.textContent = `${chat.signupName}: ${chat.message}`;
+    chatMessageElement.textContent = `${chat.signupName} >>>> ${chat.message}`;
     chatMessages.appendChild(chatMessageElement);
   });
 }
+
+// socket.on('receive-message', async (group) => {
+//   const groupId=JSON.parse(localStorage.getItem('groupId'));
+//   //console.log(">>>>>",group,groupId);
+//   //console.log(group===groupId);
+//   if(group === groupId){
+//       getmessages();
+//       getusers();
+//   }
+// })
 
 let intervalId;
 
@@ -122,7 +129,7 @@ function startUpdatingMessages() {
   intervalId = setInterval(getmessages, 1000);
 }
 
-//startUpdatingMessages();
+startUpdatingMessages();
 
 removeMemberForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -132,28 +139,24 @@ removeMemberForm.addEventListener('submit', async (event) => {
     members: membersInput.value.split(',').map(name => name.trim())
   };
 
-  if (membersInput.value) {
-    try {
+if (membersInput.value) {
+  try {
       const token = localStorage.getItem('token');
-
       const response = await axios.post("http://44.204.114.231:4000/group/removemember", memberremoveinformation, { headers: { 'Authentication': token } });
       console.log(response);
       if (response.status == 201) {
         getusers();
         membersInput.value = '';
         alert(`${response.data.message}`)
-
       }
       else if (response.status == 202) {
         membersInput.value = '';
         alert(`${response.data.message}`)
       }
-
       else if (response.status == 200) {
         getusers();
         membersInput.value = '';
         alert(`${response.data.message}`)
-
       }
       else {
         membersInput.value = '';
@@ -162,11 +165,10 @@ removeMemberForm.addEventListener('submit', async (event) => {
     } catch (error) {
       alert(error.message);
     }
-  } else {
+   } else {
     alert('Please fill out all fields.');
   }
 });
-
 
 
 makeMemberAdmin.addEventListener('submit', async (event) => {
@@ -177,39 +179,36 @@ makeMemberAdmin.addEventListener('submit', async (event) => {
     members: makeMemberAdminInput.value.split(',').map(name => name.trim())
   };
 
+
   if (makeMemberAdminInput.value) {
     try {
       const token = localStorage.getItem('token');
-
       const response = await axios.post("http://44.204.114.231:4000/group/makememberadmin", membermakeadmininformation, { headers: { 'Authentication': token } });
       console.log(response);
       if (response.status == 201) {
         getusers();
         makeMemberAdminInput.value = '';
         alert(`${response.data.message}`)
-
       }
       else if (response.status == 202) {
         makeMemberAdminInput.value = '';
         alert(`${response.data.message}`)
       }
-
       else if (response.status == 204) {
         makeMemberAdminInput.value = '';
         alert(`${response.data.message}`)
       }
-
       else if (response.status == 200) {
         getusers();
         makeMemberAdminInput.value = '';
         alert(`${response.data.message}`)
-
       }
       else {
         makeMemberAdminInput.value = '';
         throw new Error(response.message);
       }
-    } catch (error) {
+    } 
+    catch (error) {
       alert(error.message);
     }
   } else {

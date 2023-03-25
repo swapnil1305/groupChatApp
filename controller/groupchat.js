@@ -12,6 +12,7 @@ exports.getgroupuser = async (req, res, next) => {
       })
    }
 }
+
 exports.removeuser = async (req, res, next) => {
    try {
       const members = req.body.members;
@@ -25,15 +26,12 @@ exports.removeuser = async (req, res, next) => {
             }
             else {
                return res.status(200).json({ message: `${member} is not member of this group ` });
-
             }
          }
-         res.status(201).json({ success: true, message: 'Member successfully removed from group' });
-
+         res.status(201).json({ success: true, message: 'Member successfully removed from the group' });
       }
       else {
          res.status(202).json({ success: false, message: ' You are not admin of the group,you can not remove user from the group' });
-
       }
    }
    catch (err) {
@@ -43,7 +41,6 @@ exports.removeuser = async (req, res, next) => {
       })
    }
 }
-
 
 exports.makememberadmin = async (req, res, next) => {
    try {
@@ -59,24 +56,22 @@ exports.makememberadmin = async (req, res, next) => {
 
                }
                else {
-
                   await Usergroup.update(
                      { admin: true },
-                     { where: { groupId: req.body.grpId, name: member } }
+                     { where: { 
+                        groupId: req.body.grpId, 
+                        name: member }}
                   );
                }
             }
             else {
                return res.status(200).json({ message: `${member} is not member of this group ` });
-
             }
          }
          res.status(201).json({ success: true, message: 'Selected members are admin now' });
-
       }
       else {
          res.status(202).json({ success: false, message: ' You are not admin of the group,you can not make user admin' });
-
       }
    }
    catch (err) {

@@ -1,13 +1,13 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const fileupload=require('express-fileupload');
 
 const sequelize = require('./util/database');
 const User = require('./models/signup');
 const Chat = require('./models/chat');
 const Group = require('./models/group');
 const usergroup = require('./models/usergroup');
-
 
 var cors = require('cors');
 const app = express();
@@ -36,9 +36,8 @@ const chatRoutes = require('./routes/chat');
 const groupRoutes = require('./routes/group');
 const groupchatRoutes = require('./routes/groupchat');
 
-
+app.use(fileupload());
 app.use(bodyParser.json({ extended: false }));
-// app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(userRoutes);
 app.use(loginRoutes);

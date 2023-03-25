@@ -1,6 +1,5 @@
 const Group = require('../models/group');
 const UserGroup = require('../models/usergroup');
-
 const User = require('../models/signup');
 
 exports.createGroup = async (req, res, next) => {
@@ -12,7 +11,6 @@ exports.createGroup = async (req, res, next) => {
     console.log("admin", grpuser)
     if (grp.length > 0 && !grpuser[0].admin) {
       res.status(202).json({ success: false, message: ' You are not admin of the group,you can not add the user to the group' });
-
     }
     else if (grp.length > 0 && grpuser[0].admin) {
       for (const member of members) {
@@ -29,7 +27,6 @@ exports.createGroup = async (req, res, next) => {
       }
       res.status(200).json({ success: true, groupid: grp[0].id, message: 'Member successfully added in group' });
     }
-
     else {
       // Create a new group in the database
       const group = await Group.create({ name: groupName });
@@ -67,6 +64,7 @@ exports.createGroup = async (req, res, next) => {
     res.status(500).json({ message: err.message, success: false });
   }
 };
+
 
 exports.getgroupname = async (req, res, next) => {
   try {

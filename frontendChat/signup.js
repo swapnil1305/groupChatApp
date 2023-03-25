@@ -2,6 +2,7 @@ const name = document.querySelector('#name');
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 const Phonenumber = document.querySelector('#Phonenumber');
+
 async function signup(e) {
   try {
     e.preventDefault();

@@ -1,0 +1,70 @@
+.form {
+    width: 500px;
+    line-height: 1.5;
+    font-family: cursive;
+    font-style: italic;
+    font-size: large;
+    letter-spacing: 1px;
+    background-color: whitesmoke;
+    border: 5px solid rgb(32, 36, 32);
+    padding: 20px;
+    margin-left: 430px;
+    color: black;
+    text-shadow: 2px 2px 4px #7a6868;
+}
+
+.btn {
+    padding: 7px 9px;
+    background: rgb(49, 37, 37);
+    color: #fff;
+    border-radius: 5px;
+    margin: 5px 0;
+    margin-left: 10px;
+    cursor: pointer;
+    font-family: cursive;
+}
+
+.btn:hover {
+    background: #444;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19)
+}
+
+ul.a {
+    list-style-type: square;
+    list-style-position: inside;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    line-height: 1.5;
+    font-family: cursive;
+    font-size: large;
+}
+
+ul li {
+    background: #d0d3d6;
+    color: black;
+    margin: 5px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    line-height: 1.5;
+    border: 5px solid rgb(32, 36, 32);
+    padding: 20px;
+    margin-right: 800px;
+    font-family: cursive;
+}
+
+.h3 {
+    font-family: cursive;
+    color: rgb(85, 4, 4);
+    border-color: 2px solid black;
+}
+
+.h2 {
+    font-family: cursive;
+    color: rgb(133, 8, 8);
+    border-color: 2px solid black;
+    text-align: center;
+}
+
+.h1 {
+    font-family: cursive;
+    color: rgb(129, 7, 7);
+    text-shadow: 2px 2px 4px #7a6868;
+}

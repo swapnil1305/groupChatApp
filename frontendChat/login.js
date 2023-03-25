@@ -1,5 +1,6 @@
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
+
 async function login(e) {
     try {
         e.preventDefault();
