@@ -7,6 +7,6 @@ const router = express.Router();
 router.get('/users/chat', chatcontroller.getchat);
 router.post('/users/chat', auntheticateController.authenticate, chatcontroller.postchat);
 
-router.post('/sendfile/:groupId',userAuthentication.authenticate,messageControllers.uploadFile);
+router.post('/sendfile/:groupId',auntheticateController.authenticate,messageControllers.uploadFile);
 
 module.exports = router;
